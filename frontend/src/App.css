@@ -1,0 +1,54 @@
+.app{
+    position:relative;
+    height:100vh;
+    width: 100%;
+    background: transparent;
+}
+.theme-forest{
+  background: radial-gradient(ellipse at bottom, #1a3a1a 0%, #0a1a0a 100%);
+}
+
+.theme-sea {
+  background: radial-gradient(ellipse at bottom, #0a2a4a 0%, #050f1a 100%);
+}
+
+.theme-desert {
+  background: radial-gradient(ellipse at bottom, #4a2a0a 0%, #1a0f05 100%);
+}
+
+/* ── Theme Color Variables ── */
+.theme-space {
+  --accent: plum;
+  --accent-soft: rgba(221,160,221,0.15);
+  --accent-border: plum;
+  --nav-bg: rgba(8,8,20,0.97);
+  --nav-border: rgba(100,60,140,0.2);
+  --active-color: plum;
+}
+
+.theme-forest {
+  --accent: #4ade80;
+  --accent-soft: rgba(74,222,128,0.15);
+  --accent-border: #4ade80;
+  --nav-bg: rgba(8,20,8,0.97);
+  --nav-border: rgba(74,222,74,0.1);
+  --active-color: #4ade80;
+}
+
+.theme-sea {
+  --accent: #38bdf8;
+  --accent-soft: rgba(56,189,248,0.15);
+  --accent-border: #38bdf8;
+  --nav-bg: rgba(5,15,30,0.97);
+  --nav-border: rgba(56,189,248,0.1);
+  --active-color: #38bdf8;
+}
+
+.theme-desert {
+  --accent: #fb923c;
+  --accent-soft: rgba(251,146,60,0.15);
+  --accent-border: #fb923c;
+  --nav-bg: rgba(20,10,5,0.97);
+  --nav-border: rgba(251,146,60,0.1);
+  --active-color: #fb923c;
+}

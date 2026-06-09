@@ -1,0 +1,131 @@
+.theme-effects {
+  position:fixed;
+  top: 0;
+  left: 0;
+  right:0;
+  bottom:0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index:0;
+}
+.theme-effects canvas{
+    width: 100%;
+    height:100%;
+}
+
+.home-page,
+.settings-page {
+  position: relative;
+  z-index: 1;
+}
+
+.theme-effects span {
+  position: fixed;
+  will-change: transform;
+}
+/* forest theme */
+.theme-effects.forest span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #fff7a0;
+  box-shadow: 0 0 10px #fff7a0;
+  animation: firefly 12s linear infinite;
+}
+@keyframes firefly {
+  0% {
+    transform: translate(0,0);
+  }
+
+  25% {
+    transform: translate(30px,-50px);
+  }
+
+  50% {
+    transform: translate(-20px,-120px);
+  }
+
+  75% {
+    transform: translate(40px,-180px);
+  }
+
+  100% {
+    transform: translate(0,-250px);
+  }
+}
+/* sea theme */
+.theme-effects.sea span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.5);
+  animation: bubble 8s linear infinite;
+}
+@keyframes bubble {
+  0% {
+    transform: translate(0, 0) scale(0.5);
+    opacity: 0;
+  }
+
+  25% {
+    transform: translate(-10px, -100px) scale(0.8);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: translate(15px, -250px) scale(1);
+    opacity: 0.8;
+  }
+
+  75% {
+    transform: translate(-8px, -400px) scale(1.1);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: translate(10px, -600px) scale(1.2);
+    opacity: 0;
+  }
+}
+/* desert theme */
+.theme-effects.desert span {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(255, 220, 120, 0.7);
+  box-shadow: 0 0 8px rgba(255, 220, 120, 0.4);
+  animation: dust 12s linear infinite;
+}
+@keyframes dust {
+  0% {
+    transform: translate(-50px, 0);
+    opacity: 0;
+  }
+
+  20% {
+    transform: translate(20vw, -10px);
+    opacity: 0.5;
+  }
+
+  40% {
+    transform: translate(40vw, 8px);
+    opacity: 0.8;
+  }
+
+  60% {
+    transform: translate(60vw, -6px);
+    opacity: 0.8;
+  }
+
+  80% {
+    transform: translate(80vw, 12px);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: translate(110vw, 0);
+    opacity: 0;
+  }
+}

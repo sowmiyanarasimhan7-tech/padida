@@ -1,0 +1,213 @@
+/* ── Overlay ── */
+.at-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: flex-end;
+  z-index: 100;
+}
+
+/* ── Sheet ── */
+.at-sheet {
+  width: 100%;
+  background:black;
+  border-radius: 20px 20px 0 0;
+  padding: 16px 20px 44px;
+  border-top: 1px solid rgba(74, 222, 74, 0.2);
+  box-sizing: border-box;
+}
+
+.at-handle {
+  width: 32px;
+  height: 3px;
+  background: #2a3a2a;
+  border-radius: 2px;
+  margin: 0 auto 18px;
+}
+
+.at-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 20px;
+}
+
+/* ── Fields ── */
+.at-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.at-label {
+  font-size: 11px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  font-weight: 600;
+}
+
+.at-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(74, 222, 74, 0.15);
+  border-radius: 12px;
+  padding: 11px 13px;
+  color: #fff;
+  font-size: 15px;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+.at-input:focus       { border-color: var(--accent); }
+.at-input::placeholder { color:var(--accent); }   /* visible but muted */
+.at-input[type="time"] { color-scheme: dark; }
+
+/* Error state for inputs */
+.at-input--error { border-color: #f87171 !important; }
+
+.at-error {
+  font-size: 11px;
+  color: #f87171;
+  padding-left: 2px;
+}
+
+/* ── Time row ── */
+.at-row {
+  display: flex;
+  gap: 12px;
+}
+.at-row .at-field { flex: 1; }
+
+/* ── Quick presets ── */
+.at-quick-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.at-quick-btn {
+  flex: 1;
+  padding: 8px 0;
+  border-radius: 20px;
+  border: 1px solid rgba(74, 222, 74, 0.2);
+  background: transparent;
+  color: var(--accent);     /* readable on dark bg */
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.at-quick-btn:hover  { color: #ccc; border-color: rgba(74, 222, 74, 0.4); }
+.at-quick-btn.active {
+  background: rgba(74, 222, 74, 0.15);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── Individual days ── */
+.at-days-row {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;    /* wraps on very narrow screens */
+}
+.at-day-btn {
+  flex: 1;
+  min-width: 36px;   /* never collapses to nothing */
+  padding: 8px 4px;
+  border-radius: 10px;
+  border: 1px solid rgba(74, 222, 74, 0.15);
+  background: transparent;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  text-align: center;
+}
+.at-day-btn:hover  { color: #ccc; border-color: rgba(74, 222, 74, 0.35); }
+.at-day-btn.active {
+  background: rgba(74, 222, 74, 0.15);
+  border-color:var(--accent);
+  color: var(--accent);
+}
+
+/* ── Buttons ── */
+.at-save {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  background: var(--accent);
+  color: #0a1a0a;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 10px;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+.at-save:hover  { background: var(--accent); }
+.at-save:active { transform: scale(0.99); }
+
+.at-cancel {
+  width: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(74, 222, 74, 0.1);
+  background: transparent;
+  color:var(--accent);    /* readable, not invisible */
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.2s, border-color 0.2s;
+}
+.at-cancel:hover { color: #aaa; border-color: rgba(74, 222, 74, 0.25); }
+.at-email-row {
+  display: flex;
+  gap: 8px;
+}
+
+.at-email-add-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  background: var(--accent);
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.at-email-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.at-email-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(221,160,221,0.15);
+  border: 1px solid var(--accent);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: #fff;
+}
+
+.at-email-tag button {
+  background: none;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0;
+}
