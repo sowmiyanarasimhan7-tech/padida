@@ -92,7 +92,30 @@ You'll need a `.env` file in both `frontend` and `backend` with your own API key
 
 ## 📸 Screenshots
 
-*(Coming soon!)*
+### Logo / Splash Screen
+![Logo](screenshots/logo.png)
+
+### Authentication
+![Authentication Page](screenshots/authenticationpage.png)
+
+### Profile Setup
+![Profile Page](screenshots/profilepage.png)
+
+### Avatar Customization
+![Avatar Page](screenshots/avatarpage.png)
+
+### Home Page
+![Home Page](screenshots/homepage.png)
+
+### Add Task
+![Add Task](screenshots/addtask.png)
+
+### AI-Generated Notification
+![Notification](screenshots/notification.png)
+
+### Settings & Themes
+![Settings Page](screenshots/settingspage.png)
+
 
 ---
 
