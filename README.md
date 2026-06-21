@@ -1,6 +1,6 @@
 # 🪐 Padida
 
-A space-themed (with Forest, Sea, and Desert options!) task management app that motivates you to get things done — built as a college project by a B.Tech AI/ML student.
+A space-themed (with Forest, Sea, and Desert options!) task management app that motivates you to get things done — built as a college project by a B.E AI/ML student.
 
 Padida isn't just another to-do list. It uses **AI-generated notifications** that adapt their tone, character, and message based on what you're doing and how you want to be reminded — friendly, strict, sarcastic, motivational, or full Gen-Z energy.
 
@@ -98,7 +98,7 @@ You'll need a `.env` file in both `frontend` and `backend` with your own API key
 
 ## 🎓 About
 
-Built by a B.Tech AI/ML student as a hands-on project to explore full-stack development, service workers, push notifications, and AI integration — combining machine learning coursework with practical web development skills.
+Built by a B.E AI/ML student as a hands-on project to explore full-stack development, service workers, push notifications, and AI integration with practical web development skills.
 
 ---
 
