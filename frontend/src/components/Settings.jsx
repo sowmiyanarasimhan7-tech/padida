@@ -1,13 +1,11 @@
 // ── Imports ──────────────────────────────────────────────────────
 import { useState } from "react"
-// useState lets us track which theme, character, and style the user picked
-
 import "../assets/css/Settings.css"
-// imports the styles for this page
 import ThemeEffects from "./ThemeEffects"
 import { saveSettings } from "../api"
+import {playTone} from "../toneplayer"
+
 // ── Theme Data ───────────────────────────────────────────────────
-// Each theme has an id, label, and emoji icon
 const THEMES = [
   { id: "space",  label: "Space",  icon: "🚀" },
   { id: "forest", label: "Forest", icon: "🌲" },
@@ -16,7 +14,6 @@ const THEMES = [
 ]
 
 // ── Notification Characters per Theme ────────────────────────────
-// Each theme has 4 characters. When theme changes, characters change too.
 const CHARACTERS = {
   space:  [
     { id: "astronaut", label: "Astronaut", icon: "👨‍🚀" },
@@ -45,7 +42,6 @@ const CHARACTERS = {
 }
 
 // ── Notification Styles ──────────────────────────────────────────
-// Each style has an id, label, icon, and a sample message the character says
 const NOTIF_STYLES = [
   { id: "friendly",  label: "Friendly",   icon: "😊",
     message: (char) => `Hey! ${char} believes in you. Time to get it done! 💙` },
@@ -59,57 +55,58 @@ const NOTIF_STYLES = [
     message: (char) => `bestie ur task is NOT going to do itself no cap 💀 ${char} said do it rn` },
 ]
 
-// ── Main Settings Component ──────────────────────────────────────
-export default function Settings({ onHome, onThemeChange, theme}) {
-  // onHome is a function passed from App.jsx to go back to home page
-  // when user clicks the Home button in bottom nav
+// ── Notification Tones ───────────────────────────────────────────
+const NOTIF_TONES = [
+  { id: "cosmic",  label: "Cosmic",  icon: "🌌" },
+  { id: "drop",    label: "Drop",    icon: "💧" },
+  { id: "pulse",   label: "Pulse",   icon: "💓" },
+  { id: "glitch",  label: "Glitch",  icon: "⚡" },
+  { id: "bubble",  label: "Bubble",  icon: "🫧" },
+  { id: "crystal", label: "Crystal", icon: "💎" },
+]
 
-  // Load saved settings from localStorage, or use defaults
+
+// ── Main Settings Component ──────────────────────────────────────
+export default function Settings({ onHome, onThemeChange, theme }) {
   const saved = JSON.parse(localStorage.getItem("padida-settings") || "{}")
 
-  // character state — default is first character of current theme
-  const [character, setCharacter] = useState(saved.character || "astronaut")
-
-  // notification style state — default is "friendly"
+  const [character,  setCharacter]  = useState(saved.character  || "astronaut")
   const [notifStyle, setNotifStyle] = useState(saved.notifStyle || "friendly")
+  const [notifTone,  setNotifTone]  = useState(saved.notifTone  || "cosmic")
 
-  // ── Save to localStorage whenever something changes ────────────
   async function saveSetting(key, value) {
-  const current = JSON.parse(localStorage.getItem("padida-settings") || "{}")
-  const updated = { ...current, [key]: value }
-  localStorage.setItem("padida-settings", JSON.stringify(updated))
-  
-  // save to MongoDB
-  await saveSettings(updated)
-}
+    const current = JSON.parse(localStorage.getItem("padida-settings") || "{}")
+    const updated = { ...current, [key]: value }
+    localStorage.setItem("padida-settings", JSON.stringify(updated))
+    await saveSettings(updated)
+  }
 
-  // ── When theme changes, reset character to first of new theme ──
- async function handleThemeChange(newTheme) {
-  onThemeChange(newTheme)
-  await saveSetting("theme", newTheme)
-  const firstChar = CHARACTERS[newTheme][0].id
-  setCharacter(firstChar)
-  await saveSetting("character", firstChar)
-}
+  async function handleThemeChange(newTheme) {
+    onThemeChange(newTheme)
+    await saveSetting("theme", newTheme)
+    const firstChar = CHARACTERS[newTheme][0].id
+    setCharacter(firstChar)
+    await saveSetting("character", firstChar)
+  }
 
-async function handleCharacterChange(charId) {
-  setCharacter(charId)
-  await saveSetting("character", charId)
-}
+  async function handleCharacterChange(charId) {
+    setCharacter(charId)
+    await saveSetting("character", charId)
+  }
 
-async function handleStyleChange(styleId) {
-  setNotifStyle(styleId)
-  await saveSetting("notifStyle", styleId)
-}
+  async function handleStyleChange(styleId) {
+    setNotifStyle(styleId)
+    await saveSetting("notifStyle", styleId)
+  }
 
-  // ── Get current character icon for preview ────────────────────
-  // finds the character object that matches current character id
-  const currentChar = CHARACTERS[theme].find(c => c.id === character)
+  async function handleToneChange(toneId) {
+    setNotifTone(toneId)
+    await saveSetting("notifTone", toneId)
+    playTone(toneId)
+  }
 
-  // ── Get current notification style object ─────────────────────
-  const currentStyle = NOTIF_STYLES.find(s => s.id === notifStyle)
+  const currentChar  = CHARACTERS[theme].find(c => c.id === character)
 
-  // ── Render ────────────────────────────────────────────────────
   return (
     <div className={`settings-page theme-${theme}`}>
       <ThemeEffects theme={theme}/>
@@ -117,7 +114,6 @@ async function handleStyleChange(styleId) {
       {/* ── Top bar ── */}
       <div className="settings-topbar">
         <h1 className="settings-title">Settings</h1>
-        {/* shows current theme icon next to title */}
         <span className="settings-theme-icon">
           {THEMES.find(t => t.id === theme)?.icon}
         </span>
@@ -132,11 +128,9 @@ async function handleStyleChange(styleId) {
         <div className="settings-section">
           <p className="settings-section-title">🎨 Theme</p>
           <div className="settings-grid">
-            {/* loop through all 4 themes and render a card for each */}
             {THEMES.map(t => (
               <button
                 key={t.id}
-                // if this theme is selected, add "active" class for highlight
                 className={`settings-theme-card ${theme === t.id ? "active" : ""}`}
                 onClick={() => handleThemeChange(t.id)}
               >
@@ -153,11 +147,9 @@ async function handleStyleChange(styleId) {
         <div className="settings-section">
           <p className="settings-section-title">🔔 Notification Character</p>
           <p className="settings-section-sub">
-            {/* shows which theme's characters are showing */}
             Characters from the {THEMES.find(t => t.id === theme)?.label} theme
           </p>
           <div className="settings-char-row">
-            {/* loop through the 4 characters of current theme */}
             {CHARACTERS[theme].map(c => (
               <button
                 key={c.id}
@@ -177,7 +169,6 @@ async function handleStyleChange(styleId) {
         <div className="settings-section">
           <p className="settings-section-title">💬 Notification Style</p>
           <div className="settings-style-row">
-            {/* loop through all 5 notification styles */}
             {NOTIF_STYLES.map(s => (
               <button
                 key={s.id}
@@ -192,20 +183,22 @@ async function handleStyleChange(styleId) {
         </div>
 
         {/* ════════════════════════════════
-            SECTION 4 — NOTIFICATION PREVIEW
+            SECTION 4 — NOTIFICATION TONE
         ════════════════════════════════ */}
         <div className="settings-section">
-          <p className="settings-section-title">👀 Notification Preview</p>
-          {/* preview card showing what the notification will look like */}
-          <div className="settings-preview-card">
-            <span className="preview-char-icon">{currentChar?.icon}</span>
-            <div className="preview-text">
-              <p className="preview-title">Task Reminder</p>
-              {/* calls the message function with the character label */}
-              <p className="preview-msg">
-                {currentStyle?.message(currentChar?.label)}
-              </p>
-            </div>
+          <p className="settings-section-title">🔊 Notification Tone</p>
+          <p className="settings-section-sub">Tap to preview the tone</p>
+          <div className="settings-style-row">
+            {NOTIF_TONES.map(t => (
+              <button
+                key={t.id}
+                className={`settings-style-btn ${notifTone === t.id ? "active" : ""}`}
+                onClick={() => handleToneChange(t.id)}
+              >
+                <span>{t.icon}</span>
+                <span>{t.label}</span>
+              </button>
+            ))}
           </div>
         </div>
 
@@ -217,7 +210,6 @@ async function handleStyleChange(styleId) {
           <p className="settings-section-sub">
             Add your buddy to your home screen
           </p>
-          {/* widget preview showing the character */}
           <div className="settings-widget-card">
             <div className="widget-buddy">
               <span className="widget-char-icon">{currentChar?.icon}</span>
@@ -226,7 +218,6 @@ async function handleStyleChange(styleId) {
                 <p className="widget-msg">Tap to check your tasks!</p>
               </div>
             </div>
-            {/* add to home screen button */}
             <button className="widget-add-btn">
               + Add to Home Screen
             </button>
@@ -236,9 +227,7 @@ async function handleStyleChange(styleId) {
       </div>{/* end settings-scroll */}
 
       {/* ── Bottom Nav ── */}
-      {/* same nav as homepage but settings is now active */}
       <div className="bottom-nav">
-        {/* Home button — goes back to home page */}
         <button className="nav-btn" onClick={onHome}>
           <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
             stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -247,11 +236,7 @@ async function handleStyleChange(styleId) {
           </svg>
           <span>Home</span>
         </button>
-
-        {/* FAB plus button — still accessible from settings */}
         <div className="nav-fab-placeholder"/>
-
-        {/* Settings button — active because we are on this page */}
         <button className="nav-btn active">
           <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
             stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

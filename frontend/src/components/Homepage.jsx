@@ -2,10 +2,10 @@ import { useState, useRef, useEffect } from "react"
 import "../assets/css/Addtask.css"
 import "../assets/css/Homepage.css"
 import Addtask from "./Addtask"
-import { registerSW, scheduleNotification } from "../registerSW"
+import { registerSW, scheduleNotification, cancelNotification } from "../registerSW"
 import { getTasks, addTask, updateTask, deleteTask } from "../api"
 import ThemeEffects from "./ThemeEffects"
-
+import { playTone} from "../toneplayer"
 const DAYS_SHORT = ["SUN","MON","TUE","WED","THU","FRI","SAT"]
 const MONTHS     = ["January","February","March","April","May","June",
                     "July","August","September","October","November","December"]
@@ -510,6 +510,9 @@ export default function Home({ onSettings, onhome, theme, onEditAvatar }) {
           return prev.map(t => t._id === task._id ? updatedTask : t)
         })
       }
+      if (event.data?.type === "PLAY_TONE"){
+        playTone(event.data.toneId)
+      }
     }
 
     navigator.serviceWorker.addEventListener("message", handleSWMessage)
@@ -528,11 +531,13 @@ export default function Home({ onSettings, onhome, theme, onEditAvatar }) {
   }
 
   async function handleToggle(id) {
+    cancelNotification(id)
     await deleteTask(id)
     setTasks(prev => prev.filter(t => t._id !== id))
   }
 
   async function handleDelete(id) {
+    cancelNotification(id)
     await deleteTask(id)
     setTasks(prev => prev.filter(t => t._id !== id))
   }

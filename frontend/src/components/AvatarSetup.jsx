@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import "../assets/css/AvatarSetup.css"
 import { saveUser } from "../api"
 
@@ -15,14 +15,6 @@ const COLORS = [
   { name: "Cyan",   body: "#38FEDC", dark: "#1A9A8A" },
 ]
 
-const HATS = [
-  { id: "none",    label: "None" },
-  { id: "crown",   label: "👑 Crown" },
-  { id: "cap",     label: "🧢 Cap" },
-  { id: "antenna", label: "📡 Antenna" },
-  { id: "party",   label: "🎉 Party" },
-]
-
 const FACES = [
   { id: "happy",     label: "😊 Happy" },
   { id: "wink",      label: "😉 Wink" },
@@ -32,7 +24,7 @@ const FACES = [
   { id: "love",      label: "🥰 Love" },
 ]
 
-function StarCharacter({ color, hat, face }) {
+function StarCharacter({ color, face }) {
 
   const blush = (
     <>
@@ -104,31 +96,6 @@ function StarCharacter({ color, hat, face }) {
 
   return (
     <svg viewBox="30 -5 120 130" width="270" height="320" preserveAspectRatio="xMidYMid meet">
-
-      {/* Hats */}
-      {hat === "crown" && (
-  <polygon points="67,32 73,22 83,28 93,22 99,32"
-    fill="#FFD700" stroke="#B8860B" strokeWidth="2"/>
-)}
-{hat === "cap" && (
-  <>
-    <rect x="55" y="14" width="56" height="12" rx="5" fill="blue"/>
-    <ellipse cx="62" cy="26" rx="14" ry="6" fill="#333"/>
-  </>
-)}
-{hat === "antenna" && (
-  <>
-    <line x1="83" y1="22" x2="83" y2="2" stroke="#aaa" strokeWidth="3" strokeLinecap="round"/>
-    <circle cx="83" cy="-4" r="5" fill="#ff4444"/>
-  </>
-)}
-{hat === "party" && (
-  <>
-    <polygon points="83,0 67,28 99,28" fill="#ff69b4" stroke="#cc3399" strokeWidth="2"/>
-    <circle cx="83" cy="0" r="4" fill="#FFD700"/>
-  </>
-)}
-
       {/* Star body */}
       <path
         d="M 71,48 
@@ -169,15 +136,58 @@ function StarCharacter({ color, hat, face }) {
 export default function AvatarSetup({ onNext }) {
   const name = localStorage.getItem("padida-username") || "Player"
   const [selectedColor, setSelectedColor] = useState(COLORS[0])
-  const [selectedHat, setSelectedHat]     = useState("none")
   const [selectedFace, setSelectedFace]   = useState("happy")
+  
+  const [sectionIdx, setSectionIdx] = useState(0)
+
+useEffect(() => {
+  const sections = ["color", "face", "done"]
+  let sectionIndex = 0
+  let itemIndex = 0
+
+  const sectionItems = {
+    color: COLORS,
+    face: FACES,
+    done: [{ id: "done" }],
+  }
+
+  function handleKeyDown(e) {
+    if (e.key === "ArrowDown") {
+      sectionIndex = Math.min(sectionIndex + 1, sections.length - 1)
+      itemIndex = 0
+      setSectionIdx(sectionIndex)
+    } else if (e.key === "ArrowUp") {
+      sectionIndex = Math.max(sectionIndex - 1, 0)
+      itemIndex = 0
+      setSectionIdx(sectionIndex)
+    } else if (e.key === "ArrowRight") {
+      const items = sectionItems[sections[sectionIndex]]
+      itemIndex = Math.min(itemIndex + 1, items.length - 1)
+    } else if (e.key === "ArrowLeft") {
+      itemIndex = Math.max(itemIndex - 1, 0)
+    } else if (e.key === "Enter") {
+      if (sections[sectionIndex] === "done") handleDone()
+      return
+    } else {
+      return
+    }
+
+    if (sections[sectionIndex] === "color") {
+      setSelectedColor(COLORS[itemIndex])
+    } else if (sections[sectionIndex] === "face") {
+      setSelectedFace(FACES[itemIndex].id)
+    }
+  }
+
+  window.addEventListener("keydown", handleKeyDown)
+  return () => window.removeEventListener("keydown", handleKeyDown)
+}, [])
 
   async function handleDone() {
   const avatarData = {
     color: selectedColor.body,
     dark:  selectedColor.dark,
     name:  selectedColor.name,
-    hat:   selectedHat,
     face:  selectedFace,
   }
   localStorage.setItem("padida-avatar", JSON.stringify(avatarData))
@@ -195,7 +205,6 @@ export default function AvatarSetup({ onNext }) {
       <div className="avatar-preview">
         <StarCharacter
           color={selectedColor.body}
-          hat={selectedHat}
           face={selectedFace}
         />
       </div>
@@ -217,21 +226,6 @@ export default function AvatarSetup({ onNext }) {
       </div>
 
       <div className="avatar-section">
-        <p className="avatar-label">🎩 Pick your hat</p>
-        <div className="hat-row">
-          {HATS.map(h => (
-            <button
-              key={h.id}
-              className={`hat-btn ${selectedHat === h.id ? "selected" : ""}`}
-              onClick={() => setSelectedHat(h.id)}
-            >
-              {h.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="avatar-section">
         <p className="avatar-label">😊 Pick your expression</p>
         <div className="hat-row">
           {FACES.map(f => (
@@ -246,9 +240,11 @@ export default function AvatarSetup({ onNext }) {
         </div>
       </div>
 
-      <button className="avatar-done" onClick={handleDone}>
-        Let's Go 🚀
-      </button>
+      <button 
+  className={`avatar-done ${sectionIdx === 2 ? "focused" : ""}`} 
+  onClick={handleDone}>
+  Let's Go 🚀
+</button>
     </div>
     </div>
   )
